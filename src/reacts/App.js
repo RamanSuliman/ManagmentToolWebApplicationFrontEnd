@@ -1,14 +1,16 @@
 import '../css/App.css';
 import ReactDOM from 'react-dom';
-import {Counter} from "./components/counter";
-import {LoginPage} from"./components/login";
+import {Header} from "./components/view/header";
+import {Body} from "./components/view/body";
+import {Footer} from "./components/view/footer";
 
 function App()
 {
   return (
-      <div>
-          <Counter/>
-          <LoginPage/>
+      <div className="page">
+         <Header/>
+         <Body/>
+         <Footer/>
       </div>
   );
 }
