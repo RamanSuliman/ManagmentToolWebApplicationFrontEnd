@@ -12,11 +12,17 @@ export function FetchTasks(url) {
                 const json = await response.json();
                 setTask(json);
                 setLoading(false);
+                return json; // return the fetched data
             } catch (error) {
                 setError(true);
+                throw error; // throw the error to be handled later
             }
         }
-        dataFetcher();
+
+        // handle the promise returned by dataFetcher()
+        dataFetcher()
+            .then((data) => console.log("Data fetched successfully:", data))
+            .catch((error) => console.error("Error fetching data:", error));
     }, [url]);
 
     return { isLoading, task, error };
