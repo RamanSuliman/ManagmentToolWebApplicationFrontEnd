@@ -1,0 +1,26 @@
+.task_toDo{
+    margin: 5px 0;
+    border: 2px solid blue;
+}
+
+.task_inProgress{
+    margin: 5px 0;
+    border: 2px solid chartreuse;
+}
+
+.task_done{
+    margin: 5px 0;
+    border: 2px solid brown;
+}
+
+.task{
+    border: 2px solid #282c34;
+}
+
+.task_done h2{
+    color: aquamarine;
+}
+
+.sectionTitle{
+    color: #61dafb;
+}

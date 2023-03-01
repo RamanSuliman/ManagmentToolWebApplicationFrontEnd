@@ -1,0 +1,51 @@
+/* Page setting */
+html, body {
+    height: 100%;
+    padding: 0;
+}
+
+.page {
+    display: grid;
+    grid-template-rows: auto 1fr auto; /* header, body, footer */
+    background-color: brown;
+
+    height: 100vh;
+}
+
+/* ####################### Header Section ####################### */
+#header {
+    background-color: #282c34;
+    color: white;
+    min-height: 100px;
+    grid-row: 1 / 2; /* place the header in the first row */
+}
+
+/* ####################### Middle Section ####################### */
+#body {
+    display: grid;
+    grid-template-columns: 200px 1fr; /* Set the first column to 200px and the second to 1fr */
+    grid-template-rows: 1fr; /* Set the height of the container to 1fr */
+    grid-template-areas: "sidebar mainSection"; /* Define the grid areas */
+}
+
+.sidebar {
+    background-color: #ccc;
+    border-right: 2px solid blue;
+    grid-area: sidebar; /* Set the sidebar to occupy the "sidebar" area of the grid */
+    margin: 0;
+}
+
+.mainSection {
+    padding: 0 0 0 10px;
+    background-color: #cccccc;
+    grid-area: mainSection; /* Set the mainSection to occupy the "mainSection" area of the grid */
+    margin: 0;
+}
+
+/* ####################### Footer Section ####################### */
+#footer {
+    margin: 0;
+    min-height: 100px;
+    background-color: #61dafb;
+    grid-row: 3 / 4; /* place the footer in the third row */
+}

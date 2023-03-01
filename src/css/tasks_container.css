@@ -1,12 +1,14 @@
-.container {
+.taskContainer {
+    padding: 0;
+    background-color: bisque;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    margin-bottom: 20px;
 }
 
 .section {
     width: 30%;
-    margin-bottom: 30px;
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 20px;
