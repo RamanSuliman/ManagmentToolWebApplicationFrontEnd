@@ -8,16 +8,20 @@ html, body {
     display: grid;
     grid-template-rows: auto 1fr auto; /* header, body, footer */
     background-color: brown;
-
     height: 100vh;
 }
 
 /* ####################### Header Section ####################### */
 #header {
     background-color: #282c34;
-    color: white;
     min-height: 100px;
     grid-row: 1 / 2; /* place the header in the first row */
+}
+
+.siteName{
+    color: white;
+    width: 230px;
+    margin: 20px auto;
 }
 
 /* ####################### Middle Section ####################### */

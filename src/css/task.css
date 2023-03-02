@@ -1,15 +1,18 @@
 .task_toDo{
     margin: 5px 0;
+    padding: 0 30px;
     border: 2px solid blue;
 }
 
 .task_inProgress{
     margin: 5px 0;
+    padding: 0 30px;
     border: 2px solid chartreuse;
 }
 
 .task_done{
     margin: 5px 0;
+    padding: 0 30px;
     border: 2px solid brown;
 }
 
@@ -17,10 +20,18 @@
     border: 2px solid #282c34;
 }
 
+.task_toDo h2{
+    color: coral;
+}
+
+.task_inProgress h2{
+    color: cadetblue;
+}
+
 .task_done h2{
-    color: aquamarine;
+    color: cyan;
 }
 
 .sectionTitle{
-    color: #61dafb;
+    color: darkseagreen;
 }
