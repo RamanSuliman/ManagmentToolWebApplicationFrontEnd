@@ -1,7 +1,44 @@
 import React, { useState, useEffect } from "react";
 
 export function FetchTasks(url) {
-    const [task, setTask] = useState(null);
+    const [tasks, setTasks] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(false);
+    const [responseState, setResponseState] = useState(null);
+
+    useEffect(() => {
+
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    setResponseState({status: response.status, message: response.statusText});
+                }
+                return response.json();
+            })
+            .then(data => {
+                setTasks(data)
+                return data
+            })
+            .catch(() => {
+                setError(true);
+            });
+    }, [url]);
+
+    if(!error)
+        setIsLoading(false);
+
+    return { tasks, isLoading, error, responseState};
+}
+
+
+
+
+
+/*
+import React, { useState, useEffect } from "react";
+
+export function FetchTasks(url) {
+    const [tasks, setTask] = useState(null);
     const [isLoading, setLoading] = useState(true);
     const [error, setError] = useState(false);
 
@@ -9,21 +46,25 @@ export function FetchTasks(url) {
         async function dataFetcher() {
             try {
                 const response = await fetch(url);
+                console.log(response.status); // HTTP status code
+                console.log(response.statusText); // HTTP status message
+                console.log(response.headers); // HTTP headers
+                console.log("body:      " + response.body); // HTTP headers
                 const json = await response.json();
                 setTask(json);
                 setLoading(false);
-                return json; // return the fetched data
+                return { task: tasks, isLoading: isLoading, error: error };
             } catch (error) {
                 setError(true);
-                throw error; // throw the error to be handled later
+                throw error;
             }
         }
 
-        // handle the promise returned by dataFetcher()
         dataFetcher()
-            .then((data) => console.log("Data fetched successfully:", data))
-            .catch((error) => console.error("Error fetching data:", error));
+            .then((data) => console.log("Data fetched successfully--------:", data))
+            .catch((error) => console.error("Error fetching data--------:", error));
     }, [url]);
 
-    return { isLoading, task, error };
+    return { isLoading, tasks, error };
 }
+*/
