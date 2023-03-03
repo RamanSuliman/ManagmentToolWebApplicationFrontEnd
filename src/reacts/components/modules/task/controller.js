@@ -1,13 +1,26 @@
 import React, {useState} from 'react';
 import {Task} from "./task";
+import {FetchTasks} from "../ajax_calls/ajaxer";
 
 export function SectionRender() {
     //Receive api data and convert it into json object.
-    const {sections} = JSON.parse(data());
+    //const {sections} = JSON.parse(data());
+
+    //FetchTasks("http://localhost:8080/ManagmentToolApplication/api/tasks");
+
+    const { isLoading, tasks, error, responseState} = FetchTasks("http://localhost:8080/ManagmentToolApplication/api/tasks");
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+    if (error) {
+        return <div>Error fetching data. {responseState}</div>;
+    }else
+        console.log("----------------- Tasks: " + tasks.sections[0].title);
+
     return (
         <div className="taskContainer">
             {/*Map through the sections*/}
-            {sections.map(section => {
+            {tasks.sections.map(section => {
                 // For each section, add the title and
                 return <Section key={section.id} id={section.id} title={section.title} tasks={section.tasks} />
             })}

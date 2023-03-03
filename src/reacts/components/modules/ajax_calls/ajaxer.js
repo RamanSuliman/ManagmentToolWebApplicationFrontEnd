@@ -7,27 +7,33 @@ export function FetchTasks(url) {
     const [responseState, setResponseState] = useState(null);
 
     useEffect(() => {
-
-        fetch(url)
-            .then(response => {
+        console.log("useEffect");
+        fetch(url,{ method: 'POST' })
+            .then((response) => {
+                console.log("not " + response.status + " -- " + response.statusText);
                 if (!response.ok) {
-                    setResponseState({status: response.status, message: response.statusText});
+                    setResponseState({
+                        status: response.status,
+                        message: response.statusText,
+                    });
+                } else {
+                    console.log("okkkk");
                 }
                 return response.json();
             })
-            .then(data => {
-                setTasks(data)
-                return data
+            .then((data) => {
+                setTasks(data);
+                setIsLoading(false);
+                return data;
             })
-            .catch(() => {
+            .catch(error => {
+                console.log("{{{{{{ " + error);
                 setError(true);
             });
+
     }, [url]);
 
-    if(!error)
-        setIsLoading(false);
-
-    return { tasks, isLoading, error, responseState};
+    return { tasks, isLoading, error, responseState };
 }
 
 
