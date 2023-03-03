@@ -88,19 +88,68 @@ export function AddPopup({eventHandler, closeHandler})
     );
 }
 
-export function EditPopup()
+export function EditPopup({task, setTask, isEditShowing, setEditShow})
 {
+    const editMenuRef = useRef(null);
+
+    console.log(isEditShowing);
+    const innerCloseHandler = () =>{
+        setEditShow(!isEditShowing);
+    }
+
+    useEffect(() =>
+    {
+        const handleClickOutside = (event) => {
+            if (editMenuRef.current && !editMenuRef.current.contains(event.target)) {
+                innerCloseHandler();
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [editMenuRef]);
+
+    const handleAddTask = ()=>{
+        console.log(task.id + " # " + task.title + " # " + task.description + " # " + task.type);
+    }
 
     return (
         <div>
-
+            {isEditShowing && (
+                <div className="popup" ref={editMenuRef}>
+                    <h2>Edit Task</h2>
+                    <label>
+                        Title:
+                        <input type="text" value={task.title} onChange={(event) => {
+                            setTask(prevTask => ({ ...prevTask, title: event.target.value }))}} />
+                    </label>
+                    <label>
+                        Description:
+                        <textarea value={task.description} onChange={(event) => {
+                            setTask(prevTask => ({ ...prevTask, description: event.target.value }))}}/>
+                    </label>
+                    <label>
+                        Task Type:
+                        <select value={task.type} onChange={(event) => {
+                            setTask(prevTask => ({ ...prevTask, type: event.target.value }))}}>
+                            <option value="">Select a task type</option>
+                            <option value="To Do">To Do</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Done">Done</option>
+                        </select>
+                    </label>
+                    <button onClick={handleAddTask}>Add Task</button>
+                    <button onClick={innerCloseHandler}>Cancel</button>
+                </div>
+            )}
         </div>
     );
 }
 
 export function RemovePopup()
 {
-
     return (
         <div>
 
