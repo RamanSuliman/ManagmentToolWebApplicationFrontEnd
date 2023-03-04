@@ -1,24 +1,38 @@
 import React, {useState} from "react";
-import {EditPopup} from "./menus";
+import {EditPopup, RemovePopup} from "./menus";
+import {FetchTasks} from "../ajax_calls/ajaxer";
 
-export const Task = ({id, title, description, btn_text, type}) =>
+export const Task = ({id, title, description, type}) =>
 {
     const taskClassName = getTaskClassName(type);
     const [task, setTask] = useState({id: id, title: title, description: description, type: type});
+    const [isEditMenuShowing, setEditMenuShowing] = useState(false);
+    const [isTaskRemoved, setTaskRemove] = useState(false);
+    const [isRemoveMenuShowing, setRemoveMenuShowing] = useState(false);
 
-    const [isEditShowing, setEditShow] = useState(false);
-    //const task = ;
-    //console.log("Within the task: " + task.id)
-    const editEventHandler = () =>{
-        setEditShow(true);
+    const setEditMenuVisibility = ()=>{
+        setEditMenuShowing(!isEditMenuShowing);
     }
+    const setRemoveMenuVisibility = ()=>{
+        console.log("Task");
+        setRemoveMenuShowing(!isRemoveMenuShowing);
+    }
+    const removeTask = ()=>{
+        setTaskRemove(!isTaskRemoved);
+        console.log("Task with id: " + task.id + " and title: " + task.title + " is removed");
+    }
+
     return (
-        <div id={id} className={taskClassName}>
-            <h2>{title}</h2>
-            <p>{description}</p>
-            <button onClick={editEventHandler}>Edit</button>
-            {isEditShowing && (
-                <EditPopup task={task} setTask={setTask} isEditShowing={isEditShowing} setEditShow={setEditShow} />
+        <div>
+            {!isTaskRemoved && (
+                <div id={task.id} className={taskClassName}>
+                    <button onClick={setRemoveMenuVisibility}> X </button>
+                    <h2>{task.title}</h2>
+                    <p>{task.description}</p>
+                    <button onClick={setEditMenuVisibility}>Edit</button>
+                    {isEditMenuShowing && (<EditPopup task={task} setTask={setTask} isEditShowing={isEditMenuShowing} setEditShow={setEditMenuShowing} />)}
+                    {isRemoveMenuShowing && (<RemovePopup confirmHandler={removeTask}/>)}
+                </div>
             )}
         </div>
     );
