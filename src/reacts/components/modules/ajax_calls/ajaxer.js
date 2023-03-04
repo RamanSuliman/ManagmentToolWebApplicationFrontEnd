@@ -7,7 +7,7 @@ export function FetchTasks(url) {
     const [responseState, setResponseState] = useState(null);
 
     useEffect(() => {
-        console.log("useEffect");
+        console.log("FetchTasks");
         fetch(url,{ method: 'POST' })
             .then((response) => {
                 console.log("not " + response.status + " -- " + response.statusText);
@@ -17,7 +17,7 @@ export function FetchTasks(url) {
                         message: response.statusText,
                     });
                 } else {
-                    console.log("okkkk");
+                    console.log("ok");
                 }
                 return response.json();
             })
@@ -27,7 +27,7 @@ export function FetchTasks(url) {
                 return data;
             })
             .catch(error => {
-                console.log("{{{{{{ " + error);
+                console.log("Error in fetching tasks: " + error);
                 setError(true);
             });
 
@@ -36,7 +36,29 @@ export function FetchTasks(url) {
     return { tasks, isLoading, error, responseState };
 }
 
+export function AppendTask(task) {
+    const [error, setError] = useState(null);
+    const [responseState, setResponseState] = useState(null);
+    const [serverMsg, setServerMsg] = useState(null);
+    let url = "";
 
+    useEffect(() => {
+        console.log("Append task");
+        fetch(url, {
+            method: "POST",
+            body: JSON.stringify(task),
+            headers: {"Content-Type": "application/json"}
+        }).then(response => {
+            setResponseState({status: response.status, message: response.statusText});
+            return response.json();
+        })
+            .then(data => setServerMsg(data))
+            .catch(error => setError(error));
+
+    }, [task, url]);
+
+    return {serverMsg, error, responseState};
+}
 
 
 
