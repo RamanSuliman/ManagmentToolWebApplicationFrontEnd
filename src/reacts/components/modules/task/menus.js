@@ -91,28 +91,68 @@ export function AddPopup({eventHandler, closeHandler})
 export function EditPopup({task, setTask, isEditShowing, setEditShow})
 {
     const editMenuRef = useRef(null);
+    //Editing form elements
+    const inputTitle = useRef(null);
+    const inputDescription = useRef(null);
+    const inputType = useRef(null);
 
     console.log(isEditShowing);
     const innerCloseHandler = () =>{
         setEditShow(!isEditShowing);
     }
 
-    useEffect(() =>
+    const validateUserInput = () =>
     {
-        const handleClickOutside = (event) => {
-            if (editMenuRef.current && !editMenuRef.current.contains(event.target)) {
-                innerCloseHandler();
+        let hasErrors = false;
+        const inputFields = [
+            {
+                ref: inputTitle,
+                validate: value => value.trim().length >= 5 && value.trim().length <= 14
+            },
+            {
+                ref: inputDescription,
+                validate: value => value.trim().length >= 5 && value.trim().length <= 100
+            },
+            {
+                ref: inputType,
+                validate: value => value.trim().length > 0,
+            },
+        ];
+
+        inputFields.forEach(({ ref, validate }) => {
+            const value = ref.current.value;
+            const isValid = validate(value);
+
+            if (!isValid) {
+                ref.current.classList.add('invalid');
+                hasErrors = true;
+            } else {
+                ref.current.classList.remove('invalid');
             }
-        };
+        });
 
-        document.addEventListener('mousedown', handleClickOutside);
+        return !hasErrors;
+    };
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            outsideIsClicked(event, editMenuRef, innerCloseHandler);
+        };
+        document.addEventListener("mousedown", handleClickOutside);
         return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [editMenuRef]);
+    }, [innerCloseHandler]);
 
+
+    /**
+     * On edit button clicked, user validation is taken place, if valid then update the task state keeping original task id
+     *   and the rest to be updated.
+     */
     const handleAddTask = ()=>{
-        console.log(task.id + " # " + task.title + " # " + task.description + " # " + task.type);
+        if(validateUserInput())
+            setTask({id: task.id, title: inputTitle.current.value,
+                description: inputDescription.current.value, type: inputType.current.value});
     }
 
     return (
@@ -122,25 +162,22 @@ export function EditPopup({task, setTask, isEditShowing, setEditShow})
                     <h2>Edit Task</h2>
                     <label>
                         Title:
-                        <input type="text" value={task.title} onChange={(event) => {
-                            setTask(prevTask => ({ ...prevTask, title: event.target.value }))}} />
+                        <input type="text" defaultValue={task.title} ref={inputTitle}/>
                     </label>
                     <label>
                         Description:
-                        <textarea value={task.description} onChange={(event) => {
-                            setTask(prevTask => ({ ...prevTask, description: event.target.value }))}}/>
+                        <textarea defaultValue={task.description} ref={inputDescription}/>
                     </label>
                     <label>
                         Task Type:
-                        <select value={task.type} onChange={(event) => {
-                            setTask(prevTask => ({ ...prevTask, type: event.target.value }))}}>
+                        <select defaultValue={task.type} ref={inputType}>
                             <option value="">Select a task type</option>
                             <option value="To Do">To Do</option>
                             <option value="In Progress">In Progress</option>
                             <option value="Done">Done</option>
                         </select>
                     </label>
-                    <button onClick={handleAddTask}>Add Task</button>
+                    <button onClick={handleAddTask}>Edit</button>
                     <button onClick={innerCloseHandler}>Cancel</button>
                 </div>
             )}
@@ -148,11 +185,57 @@ export function EditPopup({task, setTask, isEditShowing, setEditShow})
     );
 }
 
-export function RemovePopup()
+export function RemovePopup({confirmHandler})
 {
-    return (
-        <div>
 
+    const [isShowing, setShowing] = useState(true);
+    const refMenu = useRef(null);
+
+    const closeMenu= ()=>{
+        setShowing(!isShowing);
+    };
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            outsideIsClicked(event, refMenu, closeMenu);
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        // let timer;
+        // if (!isShowing) {
+        //     timer = setTimeout(() => {
+        //         setShowing(true);
+        //     }, 500); // 500ms delay before resetting the state
+        // }
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+            // clearTimeout(timer);
+        };
+    }, [closeMenu]);
+
+    const cancel = ()=>{
+        console.log("cancel");
+    }
+    const confirm = ()=>{
+        console.log("confirm");
+        confirmHandler();
+    }
+    return (
+        <div ref={refMenu}>
+            {isShowing && (
+                <div>
+                    <input type="button" value="Cancel" onClick={cancel}/>
+                    <input type="button" value="Confirm" onClick={confirm}/>
+                </div>
+            )}
         </div>
     );
 }
+
+function outsideIsClicked(event, refMenu, callBackFunction)
+{
+    //If the ref to menu is not null and the clicked element is not a child within the ref menu then close the menu.
+    if(refMenu.current && !refMenu.current.contains(event.target))
+        callBackFunction();
+}
+
+/*  onChange={(event) => { setTask(prevTask => ({ ...prevTask, description: event.target.value }))}}  */
